@@ -146,6 +146,10 @@ android {
         minSdkVersion 23
         targetSdkVersion 36
 
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+
         vectorDrawables.generatedDensities = ['mdpi', 'hdpi', 'xhdpi', 'xxhdpi']
 
         multiDexEnabled true
@@ -253,7 +257,9 @@ def getProps(String propName) {
         return "";
     }
 }
-apply plugin: 'com.google.gms.google-services'
+if (System.getenv('VINOGRAM_FIREBASE_CONFIGURED') == 'true') {
+    apply plugin: 'com.google.gms.google-services'
+}
 
 task checkVisibility {
     doFirst {

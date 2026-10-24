@@ -58,7 +58,8 @@ removed. Google push is disabled without your own Firebase configuration;
 background delivery depends on the app retaining its connection and Android's
 battery restrictions. Optional Firebase support requires your own
 `TMessagesProj_AppStandalone/google-services.json` and
-`VINOGRAM_FIREBASE_CONFIGURED=true`. Official-app passkeys, Google billing and
+`TMessagesProj/google-services.json` and `VINOGRAM_FIREBASE_CONFIGURED=true`.
+Official-app passkeys, Google billing and
 the official Telegram APK updater are disabled for this independent client.
 
 ## Provenance and licenses

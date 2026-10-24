@@ -67,6 +67,8 @@ jobs:
           test -s "$VINOGRAM_KEYSTORE"
       - name: Test subscription parser and engine
         run: python3 Tools/subscription/test.py
+      - name: Compile Android Java sources
+        run: ./gradlew :TMessagesProj_AppStandalone:compileAfatStandaloneJavaWithJavac --no-daemon --stacktrace --max-workers=2
       - name: Assemble signed ARM64 APK
         run: ./gradlew :TMessagesProj_AppStandalone:assembleAfatStandalone --no-daemon --stacktrace --max-workers=2
       - name: Verify and stage APK
@@ -85,7 +87,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
       - name: Save native intermediates for the next build
-        if: always() && steps.native-cache.outputs.cache-hit != 'true'
+        if: always() && steps.native-cache.outputs.cache-primary-key != '' && steps.native-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
           path: TMessagesProj/.cxx
