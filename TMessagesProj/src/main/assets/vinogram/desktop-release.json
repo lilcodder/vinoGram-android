@@ -1,0 +1,17 @@
+{
+  "desktop_repository": "https://github.com/lilcodder/vinoGram",
+  "desktop_release": "Update",
+  "desktop_commit": "2a8d64abe899ad6f258490395bea5dc2ef62e0bf",
+  "android_upstream": "https://github.com/DrKLO/Telegram",
+  "android_commit": "0aae959806c57be8ad457980f2a5c6277ff18635",
+  "xray": "v26.9.9",
+  "ported_features": [
+    "branding",
+    "proxy-subscriptions",
+    "automatic-server-selection"
+  ],
+  "excluded_features": [
+    "expressive-avatars",
+    "unreleased-desktop-changes"
+  ]
+}
