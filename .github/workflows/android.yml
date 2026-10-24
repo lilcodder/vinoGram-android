@@ -51,7 +51,8 @@ jobs:
           sudo mkswap /mnt/vinogram-android.swap
           sudo swapon /mnt/vinogram-android.swap
       - name: Restore native build cache
-        uses: actions/cache@v4
+        id: native-cache
+        uses: actions/cache/restore@v4
         with:
           path: TMessagesProj/.cxx
           key: android-native-${{ runner.os }}-${{ hashFiles('TMessagesProj/jni/**', '.gitmodules', 'TMessagesProj/build.gradle') }}
@@ -83,6 +84,12 @@ jobs:
           path: dist/
           if-no-files-found: error
           retention-days: 30
+      - name: Save native intermediates for the next build
+        if: always() && steps.native-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: TMessagesProj/.cxx
+          key: ${{ steps.native-cache.outputs.cache-primary-key }}
       - name: Remove temporary signing material
         if: always()
         run: rm -f "$VINOGRAM_KEYSTORE"

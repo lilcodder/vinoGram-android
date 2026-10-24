@@ -2,6 +2,7 @@ import io
 import json
 from pathlib import Path
 import subprocess
+import xml.etree.ElementTree as ET
 
 from PIL import Image
 
@@ -36,6 +37,16 @@ def main():
     nodpi.mkdir(exist_ok=True)
     (nodpi / "vinogram_logo.png").write_bytes(released("Telegram/Resources/art/icon512.png"))
     (nodpi / "vinogram_banner.png").write_bytes(released("Telegram/Resources/art/intro_banner.png"))
+    mono = ET.fromstring(released("Telegram/Resources/icons/tray_monochrome.svg"))
+    x, y, width, height = map(float, mono.attrib["viewBox"].split())
+    paths = ''.join(f'<path android:fillColor="#FFFFFFFF" android:pathData="{node.attrib["d"]}"/>'
+                    for node in mono.iter() if node.tag.endswith('}path'))
+    anydpi = res / "drawable-anydpi"
+    anydpi.mkdir(exist_ok=True)
+    (anydpi / "notification.xml").write_text(
+        f'<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" '
+        f'android:viewportWidth="{width}" android:viewportHeight="{height}">'
+        f'<group android:translateX="{-x}" android:translateY="{-y}">{paths}</group></vector>\n', encoding="utf-8")
     for name in ("ic_launcher.xml", "ic_launcher_round.xml", "ic_launcher_sa.xml"):
         (res / "mipmap-anydpi-v26" / name).write_text('''<?xml version="1.0" encoding="utf-8"?>
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
@@ -58,7 +69,8 @@ def main():
         "ported_features": ["branding", "proxy-subscriptions", "automatic-server-selection"],
         "excluded_features": ["expressive-avatars", "unreleased-desktop-changes"],
     }, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    (ROOT / "LICENSE.upstream").write_bytes(subprocess.check_output(["git", "-C", str(ROOT), "show", f"{ANDROID_COMMIT}:LICENSE"]))
+    if not (ROOT / "LICENSE.upstream").exists():
+        (ROOT / "LICENSE.upstream").write_bytes(subprocess.check_output(["git", "-C", str(ROOT), "show", f"{ANDROID_COMMIT}:LICENSE"]))
     (ROOT / "LICENSE").write_bytes(released("LICENSE"))
     print("Imported branding only from desktop release", DESKTOP_COMMIT)
 
