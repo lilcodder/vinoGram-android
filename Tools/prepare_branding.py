@@ -47,11 +47,17 @@ def main():
         f'<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" '
         f'android:viewportWidth="{width}" android:viewportHeight="{height}">'
         f'<group android:translateX="{-x}" android:translateY="{-y}">{paths}</group></vector>\n', encoding="utf-8")
+    (anydpi / "vinogram_launcher_monochrome.xml").write_text(
+        f'<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="108dp" android:height="108dp" '
+        f'android:viewportWidth="108" android:viewportHeight="108">'
+        f'<group android:translateX="30" android:translateY="30" android:scaleX="{48 / width}" android:scaleY="{48 / height}">'
+        f'<group android:translateX="{-x}" android:translateY="{-y}">{paths}</group></group></vector>\n', encoding="utf-8")
     for name in ("ic_launcher.xml", "ic_launcher_round.xml", "ic_launcher_sa.xml"):
         (res / "mipmap-anydpi-v26" / name).write_text('''<?xml version="1.0" encoding="utf-8"?>
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
     <background android:drawable="@color/vinogram_launcher_background" />
     <foreground android:drawable="@mipmap/icon_foreground" />
+    <monochrome android:drawable="@drawable/vinogram_launcher_monochrome" />
 </adaptive-icon>
 ''', encoding="utf-8")
     (res / "values/vinogram_colors.xml").write_text('''<resources>
